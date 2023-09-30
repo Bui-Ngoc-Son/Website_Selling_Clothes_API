@@ -1,0 +1,81 @@
+using Microsoft.AspNetCore.Mvc;
+using APP_DATA.Models;
+
+
+
+namespace Website_Selling_Clothes_API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CartController : ControllerBase
+    {
+        public WebsiteSellingClothes _context = new WebsiteSellingClothes();
+        // GET: api/<ProductController>
+        [HttpGet("get-carts")]
+        public IEnumerable<Cart> Get()
+        {
+            return _context.carts.ToList();
+        }
+
+        
+
+        // POST api/<CartController>
+        [HttpPost("post-cart")]
+        public bool PostCart([FromBody] Guid id, string description)
+        {
+            try
+            {
+                id = new Guid();
+                Cart cart = new Cart
+                {
+                    Description = description,
+                };
+                _context.carts.Add(cart);
+                _context.SaveChanges();
+                return true;
+
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+        // PUT api/<CartController>/5
+        [HttpPut("put-cart")]
+        public bool PutCart([FromBody] Cart cart)
+        {
+            Cart cartfrDb = _context.carts.Find(cart.Id);
+            try
+            {
+                cartfrDb.Description = cart.Description;
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+        // DELETE api/<CartController>/5
+        [HttpDelete("delete-cart")]
+        public bool Delete(Guid id)
+        {
+            try
+            {
+                Cart cart = _context.carts.Find(id);
+                _context.carts.Remove(cart);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+    }
+}
