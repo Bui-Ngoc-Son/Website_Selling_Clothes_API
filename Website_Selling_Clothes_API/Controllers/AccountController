@@ -1,0 +1,80 @@
+using Microsoft.AspNetCore.Mvc;
+using APP_DATA.Models;
+using System.Security.Principal;
+
+namespace Website_Selling_Clothes_API.Controllers
+{
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountController : ControllerBase
+    {
+        public WebsiteSellingClothes _context = new WebsiteSellingClothes();
+        // GET: api/<AccountController>
+        [HttpGet("get-Account")]
+        public IEnumerable<Account> Get()
+        {
+            return _context.accounts.ToList();
+        }
+        // POST api/<AccountController>
+        [HttpPost("post-account")]
+        public bool PostAccount([FromBody] Guid id, string user, string password)
+        {
+            try
+            {
+                id = new Guid();
+                Account account = new Account
+                {
+                    User = user,
+                    Password = password,
+                };
+                _context.accounts.Add(account);
+                _context.SaveChanges();
+                return true;
+
+            }
+            catch (global::System.Exception)
+            {
+
+                return false;
+            }
+        }
+        // PUT api/<AccountController>/5
+        [HttpPut("put-account")]
+        public bool PutAccount([FromBody] Account account)
+        {
+            Account accountfrDb = _context.accounts.Find(account.ID);
+            try
+            {
+                accountfrDb.User = account.User;
+                accountfrDb.Password = account.Password;
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+        // DELETE api/<AccountController>/5
+        [HttpDelete("delete-account")]
+        public bool Delete(Guid id)
+        {
+            try
+            {
+                Account account = _context.accounts.Find(id);
+                _context.accounts.Remove(account);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+    }
+}
